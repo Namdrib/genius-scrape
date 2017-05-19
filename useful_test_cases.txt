@@ -1,0 +1,16 @@
+song: Hilltop Hoods, The Thirst pt. 3
+song: Eminem, Beautiful
+song: Sexion d'Assaut, Avant Quelle Parte
+song: DJ Kay Slay, 60 Second Assassins
+song: Horrorshow, Inside Story
+album: Horrorshow, Inside Story
+album: Urthboy, Smokey's Haunt
+song: Urthboy, Naïve Bravado
+album: Basshunter, Now You're Gone - The Album
+album: The Game, The Documentary 2.5
+
+
+--- Exit codes ---
+2: Command line errors (from argparse)
+3: urllib.error.HTTPError `scraper_setup(site)`
+4: General exception from loading web page `scraper_setup(site)`
