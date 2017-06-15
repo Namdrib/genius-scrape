@@ -1,7 +1,7 @@
 # Genius_Scrape Project changelog:
 - Author: Denton Phosavanh (a1689065)
 - For: Shits and Giggles (also some small utility)
-- Latest Version: 0.3.6
+- Latest Version: 0.3.8
 ---
 
 ## [Future Expansions]
@@ -15,9 +15,21 @@
 - _Unlikely_: If Genius url naming standard change, must update to match
 	- Could be a good idea to use the Genius API
 - Somehow be aware of multiple songs of the same title by the same artist
+	- Although I think this is more of an issue on Genius' side - this program can't do anything about it
 - Excluding stuff like header (["Produced by ..."](http://genius.com/The-game-100-lyrics)) and footer (["Paroles rédigées et expliquées par la team Rapgenius France!"](http://genius.com/Sexion-dassaut-problemes-dadultes-lyrics)) info
 - Verbosity command line argument
 - Automated test cases
+
+
+## [0.3.8] - 2017-06-15
+### Changed
+- Conforms with new Genius style for album page
+- Edited regex for parsing only lyrics
+
+### Added
+- DEBUG global variable
+	- Corresponding debug flag to argparse
+
 
 ## [0.3.7] - 2017-03-20
 ### Changed

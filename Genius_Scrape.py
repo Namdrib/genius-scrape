@@ -20,6 +20,7 @@ import re                       # Regular expressions
 # http://coffeeghost.net/2010/10/09/pyperclip-a-cross-platform-clipboard-module-for-python/
 
 GENIUS_SITE = "https://genius.com/"
+DEBUG = False
 
 # Sourced from http://code.activestate.com/recipes/66434-change-line-endings/
 # Convert line endings to suit the appropriate os
@@ -32,7 +33,6 @@ def convert_line_endings(temp):
 		temp.replace("\r\n", "\r")
 		temp.replace("\n", "\r")
 	elif mode.startswith("win") or mode == "cygwin":
-		import re
 		temp = re.sub("\r(?!\n)|(?<!\r)\n", "\r\n", temp)
 	return temp
 	
@@ -41,6 +41,9 @@ def convert_quote_types(temp):
 	u = unidecode(temp)
 	u.replace(u"\u2018", '').replace(u"\u2019", '')
 	u.replace(u"\u201c", "").replace(u"\u201d", "")
+	
+	if DEBUG:
+		print("\tDEBUG: Transformed {before} into {after}".format(before=temp, after=u))
 	return u
 
 # Format to conform with Genius url standards
@@ -87,6 +90,9 @@ def scraper_setup(site):
 	try:
 		req = urllib.request.Request(site, headers=hdr)
 		page = urllib.request.urlopen(req)
+		if DEBUG:
+			print("\tDEBUG: Page is {}".format(page))
+		
 	except urllib.error.HTTPError as err:
 		# Inform user of why it may have failed
 		print("-"*max(49, (6 + len(site))))
@@ -121,6 +127,10 @@ def is_song(link):
 		return False
 	elif str("album-artwork") in L:
 		return False
+		
+	if DEBUG:
+		print("\tDEBUG: {} is a valid song link".format(L))
+	
 	return True
 	
 	
@@ -130,8 +140,10 @@ def get_genius_album(artist, album, out):
 	site = "{GS}albums/{al_name}".format(GS=GENIUS_SITE, al_name=format_name(artist, album, "album"))
 	page = scraper_setup(site)
 	
-	only_song_link = SoupStrainer(class_= re.compile(".+song_link"))
+	only_song_link = SoupStrainer(class_= re.compile(".*u-display_block"))
 	soup = BeautifulSoup(page, "html.parser", parse_only = only_song_link)
+	if DEBUG:
+		print("\tDEBUG: Soup object contains: {}".format(soup.prettify()))
 
 	# Get lyrics from hyperlink
 	# This way it's guaranteed that all are correctly formatted
@@ -153,8 +165,10 @@ def get_genius_album(artist, album, out):
 def get_genius_lyrics(site, out, index=0):
 	# Set up the scraper
 	page = scraper_setup(site)
-	soup = BeautifulSoup(page, "html.parser", parse_only = SoupStrainer("lyrics"))
-	# print(soup.prettify())
+	only_lyrics = SoupStrainer(class_ = re.compile(".+lyrics"))
+	soup = BeautifulSoup(page, "html.parser", parse_only = only_lyrics)
+	if DEBUG:
+		print("\tDEBUG: Soup object contains: {}".format(soup.prettify()))
 	
 	# Acquire and process the lyrics
 	lyrics = ""
@@ -162,6 +176,8 @@ def get_genius_lyrics(site, out, index=0):
 		line = p.getText().strip()
 		line = convert_line_endings(line)
 		line = convert_quote_types(line)
+		if DEBUG:
+			print("\tDEBUG: Line: {}".format(line));
 		lyrics += line
 	
 	# Prelim setup for output methods
@@ -253,6 +269,11 @@ def argparse_setup():
 				# clip/clipboard: add output to a new clipboard entry
 				# none: do not output lyrics (for debug purposes)
 	)
+	parser.add_argument(
+		"-d", "--debug",
+		help = "show debug outputs",
+		action="store_true"
+	)
 	
 	return parser
 
@@ -260,6 +281,8 @@ def argparse_setup():
 def main():
 	parser = argparse_setup()
 	args = parser.parse_args()
+	global DEBUG
+	DEBUG = args.debug
 	
 	# Prompt for input
 	# artist = input("Enter the artist: ")
