@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Scraping
 import urllib.request, urllib.error, urllib.parse  # Load web page
 from bs4 import BeautifulSoup   # Easier scraping
@@ -8,16 +10,12 @@ from bs4 import SoupStrainer    # More efficient loading
 
 # General
 import argparse                 # Multi-word song names or artists
-import pyperclip                # Copy to clipboard (unused as of now)
+import pyperclip                # Copy to clipboard
 import string                   # user in convert_line_endings
 import sys                      # Command line args, getting os
 import textwrap
-from tkinter import Tk          # Copy to clipboard
 from unidecode import unidecode # Strip diactritics from characters
 import re                       # Regular expressions
-
-# Pasting into clipboard
-# http://coffeeghost.net/2010/10/09/pyperclip-a-cross-platform-clipboard-module-for-python/
 
 GENIUS_SITE = "https://genius.com/"
 DEBUG = False
@@ -35,13 +33,13 @@ def convert_line_endings(temp):
 	elif mode.startswith("win") or mode == "cygwin":
 		temp = re.sub("\r(?!\n)|(?<!\r)\n", "\r\n", temp)
 	return temp
-	
+
 # Convert inverted commas “”, and ‘’ to straight quotes "" and ''
 def convert_quote_types(temp):
 	u = unidecode(temp)
 	u.replace(u"\u2018", '').replace(u"\u2019", '')
 	u.replace(u"\u201c", "").replace(u"\u201d", "")
-	
+
 	if DEBUG:
 		print("\tDEBUG: Transformed {before} into {after}".format(before=temp, after=u))
 	return u
@@ -56,43 +54,43 @@ def format_name(raw_artist, raw_name, type="song"):
 	regex = re.compile(r'[ ./+]')
 	artist = regex.sub('-', unidecode(raw_artist)).lower()
 	name = regex.sub('-', unidecode(raw_name)).lower()
-	
+
 	if type == "album":
 		name = re.sub(r'[\.\']', '-', name)
-	
+
 	# Part 2: Strip down all non-alphanumeric characters
 	regex = re.compile('[^a-zA-Z0-9-]') # Only keep alphanumeric and dashes
 	artist = regex.sub('', artist).capitalize()
 	name = regex.sub('', name)
-	
+
 	# Streamline all cases of consecutive '-' as a single '-'
 	regex = re.compile('-{1,}')
 	artist = regex.sub('-', artist)
 	name = regex.sub('-', name)
-	
+
 	# If searching for an album, capitalise the name
 	if type == "album":
 		name = name.capitalize()
-	
+
 	# Part 3: Putting it all together (first letter of artist upper-case)
 	return artist + ("-" if type == "song" else "/") + name
 
 def scraper_setup(site):
 	print("[[ About to search {site} ]]".format(site=site))
-	
+
 	# This makes it work.
 	# http://stackoverflow.com/questions/13303449/urllib2-httperror-http-error-403-forbidden#13303773
 	hdr = {
 		'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.11',
 		'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
 	}
-	
+
 	try:
 		req = urllib.request.Request(site, headers=hdr)
 		page = urllib.request.urlopen(req)
 		if DEBUG:
 			print("\tDEBUG: Page is {}".format(page))
-		
+
 	except urllib.error.HTTPError as err:
 		# Inform user of why it may have failed
 		print("-"*max(49, (6 + len(site))))
@@ -111,7 +109,7 @@ def scraper_setup(site):
 		exit(4)
 	else:
 		return page
-	
+
 # Filter out the tracklist/cover art pages on an album list
 def is_song(link):
 	L = link.lower()
@@ -127,19 +125,19 @@ def is_song(link):
 		return False
 	elif str("album-artwork") in L:
 		return False
-		
+
 	if DEBUG:
 		print("\tDEBUG: {} is a valid song link".format(L))
-	
+
 	return True
-	
-	
+
+
 # For each song in an album, call get_genius_lyrics
 def get_genius_album(artist, album, out):
 	# Set up the scraper
 	site = "{GS}albums/{al_name}".format(GS=GENIUS_SITE, al_name=format_name(artist, album, "album"))
 	page = scraper_setup(site)
-	
+
 	only_song_link = SoupStrainer(class_= re.compile(".*u-display_block"))
 	soup = BeautifulSoup(page, "html.parser", parse_only = only_song_link)
 	if DEBUG:
@@ -152,7 +150,7 @@ def get_genius_album(artist, album, out):
 		hyperlink = link.get("href")
 		if is_song(hyperlink):
 			get_genius_lyrics(hyperlink, out, i+1)
-	
+
 # Create a page object and grab the lyrics from it
 # artist and song are both str
 # out should take one of three values:
@@ -169,7 +167,7 @@ def get_genius_lyrics(site, out, index=0):
 	soup = BeautifulSoup(page, "html.parser", parse_only = only_lyrics)
 	if DEBUG:
 		print("\tDEBUG: Soup object contains: {}".format(soup.prettify()))
-	
+
 	# Acquire and process the lyrics
 	lyrics = ""
 	for p in soup.find_all('p'):
@@ -179,7 +177,7 @@ def get_genius_lyrics(site, out, index=0):
 		if DEBUG:
 			print("\tDEBUG: Line: {}".format(line));
 		lyrics += line
-	
+
 	# Prelim setup for output methods
 	# Create the file
 	# Add song-numbers (according to the order they were passed,
@@ -187,25 +185,14 @@ def get_genius_lyrics(site, out, index=0):
 	if out == "file":
 		name = site.rsplit('/', 1)[-1]
 		f = open("{n}-{name}.OUT".format(n=str(index).zfill(2), name=name), "w")
-	# Setup clipboard
-	elif out == "clip":
-		# Do clip stuff here
-		print("TODO: Clipboard initialisation here!")
-		entireSong = ""
-		# r = Tk()
-		# r.withdraw()
-		# r.clipboard_clear()
-		# Create clipboard
-		# clear clipboard	
-	
+
 	# Print the lyrics according to `out`
 	if out == "file":
 		f.write(lyrics)
 		f.close()
 	elif out == "clip":
-		# append to clipboard
-		# clipboard.add(lyrics)
-		print(lyrics)
+		pyperclip.copy(lyrics)
+		print("Lyrics copied to clipboard")
 	elif out == "none":
 		pass
 	elif out == "return":
@@ -221,7 +208,7 @@ def get_lyrics_for_iTunes():
 	main_library = itunes.LibraryPlaylist
 	tracks = main_library.Tracks
 	num_tracks = tracks.count
-	
+
 	for i in range(1, num_tracks+1):
 		current_track = tracks.Item(i)
 		# (Cannot access lyrics for .wavs)
@@ -251,7 +238,7 @@ def argparse_setup():
 			 4 : General exception from urllib.request
 			""")
 	)
-	
+
 	parser.add_argument(
 		"-i", "--item",
 		default = "song",
@@ -274,7 +261,7 @@ def argparse_setup():
 		help = "show debug outputs",
 		action="store_true"
 	)
-	
+
 	return parser
 
 
@@ -283,13 +270,13 @@ def main():
 	args = parser.parse_args()
 	global DEBUG
 	DEBUG = args.debug
-	
+
 	# Prompt for input
 	# artist = input("Enter the artist: ")
 	# item = input("Enter the {item_type}".format(item_type=args.item))
 	artist = input()
 	item = input()
-	
+
 	# Retrieve lyrics
 	if args.item == "song":
 		name = format_name(artist, item, "song")
@@ -298,21 +285,6 @@ def main():
 	else:
 		get_genius_album(artist, item, args.output)
 	return 0
-		
+
 if __name__ == "__main__":
 	main()
-	
-	# TESTING STUFF
-	# a = "\"Hi, my name is “Name”, and ‘single’\""
-	# print("{name} {converted}".format(name=a, converted=convert_quote_types(a)))
-	# Regex: more than one '-' in a row gets reduced to one '-'
-	# regex = re.compile('-{1,}') # Only keep alphanumeric and dashes
-	# regex = re.compile('-{1,}') # Any consecutive sets of dashes
-	# artist = regex.sub('', artist).capitalize()
-	# name = regex.sub('', name)
-	# a = "the-phrase"
-	# b = "the----phrase"
-	# c = "c--a"
-	# print(regex.sub('-', a))
-	# print(regex.sub('-', b))
-	# print(regex.sub('-', c))

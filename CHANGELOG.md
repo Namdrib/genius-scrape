@@ -1,7 +1,7 @@
 # Genius_Scrape Project changelog:
 - Author: Denton Phosavanh (a1689065)
 - For: Shits and Giggles (also some small utility)
-- Latest Version: 0.3.8
+- Latest Version: 0.3.9
 ---
 
 ## [Future Expansions]
@@ -20,6 +20,10 @@
 - Verbosity command line argument
 - Automated test cases
 
+## [0.3.9] - 2018-03-08
+### Added
+- python3 shebang (now can run using `./Genius_Scrapy.py`)
+- clipboard functionality (using [pyperclip](https://github.com/asweigart/pyperclip))
 
 ## [0.3.8] - 2017-06-15
 ### Changed
