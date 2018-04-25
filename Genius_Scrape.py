@@ -150,6 +150,8 @@ def get_genius_album(artist, album, out):
 		hyperlink = link.get("href")
 		if is_song(hyperlink):
 			get_genius_lyrics(hyperlink, out, i+1)
+			if out == "clip":
+				input("Press any key to continue")
 
 # Create a page object and grab the lyrics from it
 # artist and song are both str
@@ -249,7 +251,6 @@ def argparse_setup():
 		"-o", "--output",
 		default = "std",
 		choices = ["std", "file", "clip", "clipboard", "none", "return"],
-		# formatter_class=argparse.RawDescriptionHelpFormatter,
 		help = "how to handle output (default: std)"
 				# std           : output to standard output
 				# file          : output to a file

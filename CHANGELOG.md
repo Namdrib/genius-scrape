@@ -1,7 +1,7 @@
 # Genius_Scrape Project changelog:
 - Author: Denton Phosavanh (a1689065)
 - For: Shits and Giggles (also some small utility)
-- Latest Version: 0.3.9
+- Latest Version: 0.4.1
 ---
 
 ## [Future Expansions]
@@ -20,7 +20,12 @@
 - Verbosity command line argument
 - Automated test cases
 
-## [0.3.9] - 2018-03-08
+## [0.4.1] - 2018-04-25
+### Added
+- "Press any key to continue" if using both album input and clipboard output
+  - Gives user more time to utilise the clipboard without overwriting
+
+## [0.4.0] - 2018-03-08
 ### Added
 - python3 shebang (now can run using `./Genius_Scrapy.py`)
 - clipboard functionality (using [pyperclip](https://github.com/asweigart/pyperclip))

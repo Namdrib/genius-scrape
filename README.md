@@ -30,6 +30,6 @@
 		- e.g. `python3 Genius_Scrape.py -i album -o file` -> "Lefa" "Monsieur Fall" (quotes for clarity)
 		- this will search all the songs in Monsieur Fall, and save the lyrics of each to separate plaintext files
 	- clip : writes the lyrics into the clipboard (next paste action will paste lyrics) 
-		- (not recommended in conjunction with `-i album`, else it will only preserve the most recent song)
+		- when used in conjunction with `-i album`, it will pause between each song, promtping for any key to be pressed before continuing
 		- **WARNING**: this will overwrite the existing clipboard entry
 	- none : do not output lyrics (used for debug purposes)
