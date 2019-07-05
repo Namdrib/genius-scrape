@@ -1,8 +1,8 @@
-# GeniusScrape project readme file
+# genius-scrape project readme file
 ## Requirements
 - Python 3.x
-- pip packages: `bs4`, `pyperclip`, `unidecode`
-	- install any individual package using `pip3 install x` where x is the package name
+- pip packages: install using `pip3 install -r requirements.txt` (may require using `sudo -H` at the beginning)
+	- recommend using with virtual environments
 - **if using `clip` output**: x11, `xclip`
 - Internet connection
 	- If no internet connection is had when running the program, it will forever try to parse the Genius website with no result
@@ -11,7 +11,7 @@
 - Search for lyrics on [Genius](http://genius.com), provided an artist, either a song or album name, and that the page exists on Genius
 
 ## Instructions
-- Download the repository
+- Clone the repository
 - For argument help, run `python3 Genius_Scrape.py -h`
 - Search for an individual song:
 	- Run `python3 Genius_Scrape.py` then follow the prompts
