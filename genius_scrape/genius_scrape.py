@@ -1,17 +1,17 @@
-# Scraping
+# -*- coding: utf-8 -*-
+
+import re  # Regular expressions
+
 from bs4 import BeautifulSoup  # Easier scraping
 from bs4 import SoupStrainer  # More efficient loading
-
-# General
 import pyperclip  # Copy to clipboard
-import re  # Regular expressions
 from unidecode import unidecode  # Strip diactritics from characters
 
-import config
-import utils
+from genius_scrape import config
+from genius_scrape import utils
 
 
-def format_name(raw_artist, raw_name, type="song"):
+def format_name(raw_artist, raw_name, item_type="song"):
     """
     Format to conform with Genius url standards
     given raw_artist = "Hilltop Hoods", raw_name = "The Hard Road"
@@ -22,18 +22,20 @@ def format_name(raw_artist, raw_name, type="song"):
     """
 
     # Part 1: Convert to lower case and join them with '-'
-    # This accounts for stuff like NaÃ¯ve" -> "Naive" and "TournÃ©e" ->
+    # This accounts for stuff like Naïve" -> "Naive" and "Tournée" ->
     # "Tournee"
-    regex = re.compile(r'[ ./+]')
+    # the '$' works with A$AP, but not $hort...
+    regex = re.compile(r'[ /$+]')
     artist = regex.sub('-', unidecode(raw_artist)).lower()
     name = regex.sub('-', unidecode(raw_name)).lower()
 
-    if type == "album":
-        name = re.sub(r'[\.\']', '-', name)
+    # Preserve "." and "'" in albums
+    if item_type == "album":
+        name = re.sub('[\\.\']', '-', name)
 
     # Part 2: Strip down all non-alphanumeric characters
     regex = re.compile('[^a-zA-Z0-9-]')  # Only keep alphanumeric and dashes
-    artist = regex.sub('', artist).capitalize()
+    artist = regex.sub('', artist)
     name = regex.sub('', name)
 
     # Streamline all cases of consecutive '-' as a single '-'
@@ -41,12 +43,17 @@ def format_name(raw_artist, raw_name, type="song"):
     artist = regex.sub('-', artist)
     name = regex.sub('-', name)
 
+    # Trim leading and trailing '-'
+    artist = artist.strip('-')
+    name = name.strip('-')
+
     # If searching for an album, capitalise the name
-    if type == "album":
+    artist = artist.capitalize()
+    if item_type == "album":
         name = name.capitalize()
 
     # Part 3: Putting it all together (first letter of artist upper-case)
-    return artist + ("-" if type == "song" else "/") + name
+    return artist + ('-' if item_type == "song" else '/') + name
 
 
 def is_song(link):
@@ -79,7 +86,7 @@ def format_genius_site(artist, item, item_type):
     Return the Genius URL for a given artist/item/item_type combination as a string
     Note: this may break if Genius changes the way they construct their URLs
     """
-    
+
     name = format_name(artist, item, item_type)
     if item_type == "album":
         site = "{GS}/albums/{name}".format(GS=config.GENIUS_SITE, name=name)
