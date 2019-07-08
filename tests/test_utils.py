@@ -15,5 +15,6 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(utils.convert_quote_types("regular"), "regular")
         self.assertEqual(utils.convert_quote_types(""), "")
 
+
 if __name__ == '__main__':
     unittest.main()
