@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
-# General
 import argparse  # Multi-word song names or artists
 import textwrap
 
-import config
-import genius_scrape
+from genius_scrape import config
+from genius_scrape import genius_scrape
 
 
 def argparse_setup():

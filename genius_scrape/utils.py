@@ -1,14 +1,11 @@
-# Scraping
-import urllib.request
-import urllib.error
-import urllib.parse  # Load web page
-
 import re
-import string
 import sys  # getting os
+import urllib.error
+import urllib.request
+
 from unidecode import unidecode  # Strip diactritics from characters
 
-import config
+from genius_scrape import config
 
 
 def convert_line_endings(temp):
