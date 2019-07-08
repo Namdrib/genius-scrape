@@ -56,31 +56,6 @@ def format_name(raw_artist, raw_name, item_type="song"):
     return artist + ('-' if item_type == "song" else '/') + name
 
 
-def is_song(link):
-    """
-    Filter out the tracklist/cover art pages on an album list
-    """
-
-    L = link.lower()
-    if str("lyrics") not in L:
-        return False
-    elif str("tracklist") in L:
-        return False
-    elif str("pochette") in L:
-        return False
-    elif str("cover-art") in L:
-        return False
-    elif str("album-cover") in L:
-        return False
-    elif str("album-artwork") in L:
-        return False
-
-    if config.DEBUG:
-        print("\tconfig.DEBUG: {} is a valid song link".format(L))
-
-    return True
-
-
 def format_genius_site(artist, item, item_type):
     """
     Return the Genius URL for a given artist/item/item_type combination as a string
@@ -93,6 +68,29 @@ def format_genius_site(artist, item, item_type):
     else:
         site = "{GS}/{name}-lyrics".format(GS=config.GENIUS_SITE, name=name)
     return site
+
+
+def is_song(link):
+    """
+    Filter out the tracklist/cover art pages on an album list
+    Some of this checking is probably redundant
+    """
+
+    L = link.lower()
+    if L.endswith("lyrics"):
+        return True
+
+    # the link contains any "bad" keywords
+    bad_items = [
+        "tracklist", "pochette", "cover-art", "album-cover", "album-artwork"
+    ]
+    if L.endswith("annotated") or any(x in L for x in bad_items):
+        return False
+
+    if config.DEBUG:
+        print("\tconfig.DEBUG: {} is a valid song link".format(L))
+
+    return True
 
 
 def get_genius_lyrics_from_parts(artist, song):
@@ -145,19 +143,19 @@ def get_genius_album(artist, album, out):
         print("\tconfig.DEBUG: Soup object contains: {}".format(soup.prettify()))
 
     # Get lyrics from hyperlinks on the page
-    all_links = soup.find_all("a")
+    all_links = soup.find_all('a')
     for i, link in enumerate(all_links):
-        hyperlink = link.get("href")
+        hyperlink = link.get('href')
         if is_song(hyperlink):
             lyrics = get_genius_lyrics(hyperlink, i + 1)
-            write_lyrics(lyrics, out)
+            write_lyrics(lyrics, out, site)
 
             # so the clipboard doesn't get overwritten
             if out == "clip":
                 input("Press enter to continue ({}/{})".format(i + 1, len(all_links)))
 
 
-def write_lyrics(lyrics, out, index=0):
+def write_lyrics(lyrics, out, index=0, site=""):
     """
     Write lyrics to `out`
 
