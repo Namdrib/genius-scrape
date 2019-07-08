@@ -82,7 +82,7 @@ def is_song(link):
 
     # the link contains any "bad" keywords
     bad_items = [
-        "tracklist", "pochette", "cover-art", "album-cover", "album-artwork"
+        "album-artwork", "album-cover", "cover-art", "pochette", "tracklist"
     ]
     if L.endswith("annotated") or any(x in L for x in bad_items):
         return False
