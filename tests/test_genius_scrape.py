@@ -7,7 +7,7 @@ class TestGeniusScrape(unittest.TestCase):
     def test_format_name_album(self):
 
         album_tests = {
-            # (artist, album) : expected
+            # (artist, album): expected
             ("Basshunter", "Now You're Gone - The Album"): "Basshunter/Now-you-re-gone-the-album",
             ("Golden Era Records", "2011 Golden Era Mixtape"): "Golden-era-records/2011-golden-era-mixtape",
             ("Horrorshow", "Inside Story"): "Horrorshow/Inside-story",
@@ -26,7 +26,7 @@ class TestGeniusScrape(unittest.TestCase):
     def test_format_name_song(self):
 
         song_tests = {
-            # (artist, song) : expected
+            # (artist, song): expected
             ("DJ Kay Slay", "60 Second Assassins"): "Dj-kay-slay-60-second-assassins",
             ("Hilltop Hoods", "The Thirst Pt. 1"): "Hilltop-hoods-the-thirst-pt-1",
             ("Horrorshow", "Inside Story"): "Horrorshow-inside-story",
@@ -42,7 +42,7 @@ class TestGeniusScrape(unittest.TestCase):
     def test_format_genius_site_album(self):
 
         album_tests = {
-            # (artist, album) : expected
+            # (artist, album): expected
             ("Basshunter", "Now You're Gone - The Album"): "https://genius.com/albums/Basshunter/Now-you-re-gone-the-album",
             ("Golden Era Records", "2011 Golden Era Mixtape"): "https://genius.com/albums/Golden-era-records/2011-golden-era-mixtape",
             ("Horrorshow", "Inside Story"): "https://genius.com/albums/Horrorshow/Inside-story",
@@ -61,7 +61,7 @@ class TestGeniusScrape(unittest.TestCase):
     def test_format_genius_site_song(self):
 
         song_tests = {
-            # (artist, song) : expected
+            # (artist, song): expected
             ("DJ Kay Slay", "60 Second Assassins"): "https://genius.com/Dj-kay-slay-60-second-assassins-lyrics",
             ("Hilltop Hoods", "The Thirst Pt. 1"): "https://genius.com/Hilltop-hoods-the-thirst-pt-1-lyrics",
             ("Horrorshow", "Inside Story"): "https://genius.com/Horrorshow-inside-story-lyrics",
