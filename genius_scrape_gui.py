@@ -7,6 +7,7 @@ from tkinter import Tk
 
 from genius_scrape import genius_scrape
 
+
 class GeniusScrapeGui:
 
     def __init__(self):
@@ -28,7 +29,8 @@ class GeniusScrapeGui:
         self.item_type_options = ["Song", "Album"]
         self.item_type_variable = StringVar(self.window)
         self.item_type_variable.set(self.item_type_options[0])
-        self.item_type_dropdown = OptionMenu(self.window, self.item_type_variable, *self.item_type_options)
+        self.item_type_dropdown = OptionMenu(
+            self.window, self.item_type_variable, *self.item_type_options)
         self.item_type_dropdown.grid(column=0, row=1)
 
         self.item_input = Entry(self.window, width=30)
@@ -37,14 +39,15 @@ class GeniusScrapeGui:
         self.output_options = ["std", "file", "clip"]
         self.output_variable = StringVar(self.window)
         self.output_variable.set(self.output_options[0])
-        self.output_dropdown = OptionMenu(self.window, self.output_variable, *self.output_options)
+        self.output_dropdown = OptionMenu(
+            self.window, self.output_variable, *self.output_options)
         self.output_dropdown.grid(column=0, row=3)
 
-        self.go_button = Button(self.window, text="Go!", command=self.get_lyrics)
+        self.go_button = Button(self.window, text="Go!",
+                                command=self.get_lyrics)
         self.go_button.grid(column=1, row=3)
 
         self.window.mainloop()
-
 
     def get_lyrics(self):
         """
