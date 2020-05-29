@@ -110,8 +110,12 @@ def get_genius_lyrics(site, index=0):
 
     # Set up the scraper
     page = utils.scraper_setup(site)
+    page_text = page.text
+
+    # Set up BeautifulSoup components
     only_lyrics = SoupStrainer(class_=re.compile(".+lyrics"))
-    soup = BeautifulSoup(page, "html.parser", parse_only=only_lyrics)
+    soup = BeautifulSoup(page_text, "html.parser", parse_only=only_lyrics)
+
     if config.DEBUG:
         print("\tconfig.DEBUG: Soup object contains: {}".format(soup.prettify()))
 
@@ -136,9 +140,12 @@ def get_genius_album(artist, album, out):
     # Set up the scraper
     site = format_genius_site(artist, album, "album")
     page = utils.scraper_setup(site)
+    page_text = page.text
 
+    # Set up BeautifulSoup components
     only_song_link = SoupStrainer(class_=re.compile(".*u-display_block"))
-    soup = BeautifulSoup(page, "html.parser", parse_only=only_song_link)
+    soup = BeautifulSoup(page_text, "html.parser", parse_only=only_song_link)
+
     if config.DEBUG:
         print("\tconfig.DEBUG: Soup object contains: {}".format(soup.prettify()))
 

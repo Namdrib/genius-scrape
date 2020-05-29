@@ -1,4 +1,5 @@
 import re
+import requests
 import sys  # getting os
 import urllib.error
 import urllib.request
@@ -44,16 +45,8 @@ def scraper_setup(site):
     """
     print("[[ About to search {site} ]]".format(site=site))
 
-    # This makes it work.
-    # http://stackoverflow.com/questions/13303449/urllib2-httperror-http-error-403-forbidden#13303773
-    hdr = {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.11',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
-    }
-
     try:
-        req = urllib.request.Request(site, headers=hdr)
-        page = urllib.request.urlopen(req)
+        r = requests.get(site)
         if config.DEBUG:
             print("\tconfig.DEBUG: Page is {}".format(page))
 
@@ -74,4 +67,4 @@ def scraper_setup(site):
         print("Run-time error: {}".format(err))
         exit(4)
     else:
-        return page
+        return r
