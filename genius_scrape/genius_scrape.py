@@ -155,7 +155,7 @@ def get_genius_album(artist, album, out):
         hyperlink = link.get('href')
         if is_song(hyperlink):
             lyrics = get_genius_lyrics(hyperlink, i + 1)
-            write_lyrics(lyrics, out, site)
+            write_lyrics(lyrics, out, i, site)
 
             # so the clipboard doesn't get overwritten
             if out == "clip":
@@ -175,19 +175,17 @@ def write_lyrics(lyrics, out, index=0, site=""):
     index is the song number
     """
 
-    # Prelim setup for output methods
-    # Create the file
-    # Add song-numbers (according to the order they were passed,
-    # not their actual position in the album) zero-padded (width=2)
-    if out == "file":
-        name = site.rsplit('/', 1)[-1]
-        f = open("{n}-{name}.OUT".format(n=str(index).zfill(2), name=name), "w")
-
     # Print the lyrics according to `out`
     if out == "file":
-        f.write(lyrics)
-        f.close()
-        print("Lyrics written to " + f.name)
+        # Create the file
+        # Add song-numbers (according to the order they were passed,
+        # not their actual position in the album) zero-padded (width=2)
+        name = site.rsplit('/', 2)
+        artist = name[1]
+        title = name[2]
+        with open("{n}-{artist}-{title}.OUT".format(n=str(index).zfill(2), artist=artist, title=title), "w") as f:
+            f.write(lyrics)
+            print("Lyrics written to " + f.name)
     elif out == "clip":
         pyperclip.copy(lyrics)
         print("Lyrics copied to clipboard")
