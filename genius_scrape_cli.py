@@ -21,8 +21,7 @@ def argparse_setup():
 			------------
 			 0 : Everything worked as planned
 			 2 : Error parsing arguments
-			 3 : urllib.error.HTTPError
-			 4 : General exception from urllib.request
+			 3 : Non-200 HTTP status code
 			""")
     )
 

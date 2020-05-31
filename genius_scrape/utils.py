@@ -1,7 +1,6 @@
 import re
+import requests
 import sys  # getting os
-import urllib.error
-import urllib.request
 
 from unidecode import unidecode  # Strip diactritics from characters
 
@@ -44,34 +43,19 @@ def scraper_setup(site):
     """
     print("[[ About to search {site} ]]".format(site=site))
 
-    # This makes it work.
-    # http://stackoverflow.com/questions/13303449/urllib2-httperror-http-error-403-forbidden#13303773
-    hdr = {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.11',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
-    }
+    page = requests.get(site)
 
-    try:
-        req = urllib.request.Request(site, headers=hdr)
-        page = urllib.request.urlopen(req)
-        if config.DEBUG:
-            print("\tconfig.DEBUG: Page is {}".format(page))
-
-    except urllib.error.HTTPError as err:
+    if page.status_code != 200:
         # Inform user of why it may have failed
         print("-" * max(49, (6 + len(site))))
         print("[[ {site} ]]".format(site=site))
-        print("There was an error in opening this page")
+        print("There was an error in opening this page (status code {})".format(
+            page.status_code))
         print("This is most likely due to either of two reasons:")
         print("a) Either the artist or song name was misspelled")
         print("b) The Genius page for this entry does not exist")
         print("Please ensure correctness of artist and song name")
         print("-" * max(49, (6 + len(site))))
-        print("Run-time error: {}".format(err))
         exit(3)
-    except Exception as err:
-        # import traceback
-        print("Run-time error: {}".format(err))
-        exit(4)
     else:
         return page
