@@ -1,8 +1,6 @@
 import re
 import requests
 import sys  # getting os
-import urllib.error
-import urllib.request
 
 from unidecode import unidecode  # Strip diactritics from characters
 
@@ -46,14 +44,13 @@ def scraper_setup(site):
     print("[[ About to search {site} ]]".format(site=site))
 
     page = requests.get(site)
-    if config.DEBUG:
-        print("\tconfig.DEBUG: Page status is {}".format(page.status_code))
 
     if page.status_code != 200:
         # Inform user of why it may have failed
         print("-" * max(49, (6 + len(site))))
         print("[[ {site} ]]".format(site=site))
-        print("There was an error in opening this page (status code {})".format(page.status_code))
+        print("There was an error in opening this page (status code {})".format(
+            page.status_code))
         print("This is most likely due to either of two reasons:")
         print("a) Either the artist or song name was misspelled")
         print("b) The Genius page for this entry does not exist")
