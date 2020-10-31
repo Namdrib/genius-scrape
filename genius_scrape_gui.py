@@ -57,13 +57,17 @@ class GeniusScrapeGui:
         Makes calls to the genius_scrape module
         """
 
+        # Take user input
         artist = self.artist_input.get().lower()
         item = self.item_input.get().lower()
+
+        # Read the options and turn them into the enum value
         item_type_str = self.item_type_variable.get()
         item_type = enums.ItemType[item_type_str]
         output_str = self.output_variable.get()
         output = enums.OutputType[output_str]
 
+        # Check the inputs have been populated
         if not artist:
             print("artist field must be filled in")
             return
