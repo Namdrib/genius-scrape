@@ -39,11 +39,11 @@ def argparse_setup():
         # type=enums.OutputType.__getitem__,
         default='STD',
         choices=enums.OutputType.__members__,
-        help="how to handle output (default: std)"
-        # std  : output to standard output
-        # file : output to a file
-        # clip : add output to a new clipboard entry
-        # none : do not output lyrics (for debug purposes)
+        help="how to handle output (default: STD)"
+        # STD  : output to standard output
+        # FILE : output to a file
+        # CLIP : add output to a new clipboard entry
+        # NONE : do not output lyrics (for debug purposes)
     )
 
     parser.add_argument(
@@ -80,7 +80,7 @@ def main():
         genius_scrape.write_lyrics(lyrics, args.output)
     elif args.item is enums.ItemType.ALBUM:
         if config.DEBUG:
-            print(l"\tconfig.DEBUG: treating as an album")
+            print("\tconfig.DEBUG: treating as an album")
         genius_scrape.get_genius_album(artist, item, args.output)
     return 0
 

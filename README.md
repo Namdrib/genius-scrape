@@ -25,12 +25,12 @@
 	- The song page must exist for it to work. Otherwise, it will throw an exception
 
 - The output method can be changed with command line flag `-o`. This can take either of four values: `STD`, `FILE`, `CLIP`, or `NONE`
-	- std : print lyrics to standard output
-	- file : write lyrics to a file in the current directory (suffixed `.OUT`)
+	- STD : print lyrics to standard output
+	- FILE : write lyrics to a file in the current directory (suffixed `.OUT`)
 		- e.g. `python3 genius_scrape_cli.py -i ALBUM -o FILE` -> `Lefa` `Monsieur Fall`
 		- this will search all the songs in the album "Monsieur Fall", and save the lyrics of each to separate plaintext files
-	- clip : writes the lyrics into the clipboard (next paste action will paste lyrics)
+	- CLIP : writes the lyrics into the clipboard (next paste action will paste lyrics)
 		- when used in conjunction with `-i ALBUM`, it will pause between each song, promtping for any key to be pressed before continuing
 		- **WARNING**: this will overwrite the existing clipboard entry
-	- none : do not output lyrics (used for debug purposes)
+	- NONE : do not output lyrics (used for debug purposes)
 
