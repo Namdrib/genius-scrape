@@ -8,10 +8,11 @@ import pyperclip  # Copy to clipboard
 from unidecode import unidecode  # Strip diactritics from characters
 
 from genius_scrape import config
+from genius_scrape import enums
 from genius_scrape import utils
 
 
-def format_name(raw_artist, raw_name, item_type="song"):
+def format_name(raw_artist, raw_name, item_type=enums.ItemType.SONG):
     """
     Format to conform with Genius url standards
     given raw_artist = "Hilltop Hoods", raw_name = "The Hard Road"
@@ -30,7 +31,7 @@ def format_name(raw_artist, raw_name, item_type="song"):
     name = regex.sub('-', unidecode(raw_name)).lower()
 
     # Preserve "." and "'" in albums
-    if item_type == "album":
+    if item_type is enums.ItemType.ALBUM:
         name = re.sub('[\\.\']', '-', name)
 
     # Part 2: Strip down all non-alphanumeric characters
@@ -49,11 +50,11 @@ def format_name(raw_artist, raw_name, item_type="song"):
 
     # If searching for an album, capitalise the name
     artist = artist.capitalize()
-    if item_type == "album":
+    if item_type is enums.ItemType.ALBUM:
         name = name.capitalize()
 
     # Part 3: Putting it all together (first letter of artist upper-case)
-    return artist + ('-' if item_type == "song" else '/') + name
+    return artist + ('-' if item_type is enums.ItemType.SONG else '/') + name
 
 
 def format_genius_site(artist, item, item_type):
@@ -62,11 +63,15 @@ def format_genius_site(artist, item, item_type):
     Note: this may break if Genius changes the way they construct their URLs
     """
 
+    print("formatting genius site with artist: {}, item: {}, type: {}".format(artist, item, item_type))
+
     name = format_name(artist, item, item_type)
-    if item_type == "album":
+    print("name = {}".format(name))
+    if item_type is enums.ItemType.ALBUM:
         site = "{GS}/albums/{name}".format(GS=config.GENIUS_SITE, name=name)
     else:
         site = "{GS}/{name}-lyrics".format(GS=config.GENIUS_SITE, name=name)
+    print("site = {}".format(site))
     return site
 
 
@@ -98,7 +103,7 @@ def get_genius_lyrics_from_parts(artist, song):
     Builds the URL from the artist and song, then calls get_genius_lyrics
     """
 
-    site = format_genius_site(artist, song, "song")
+    site = format_genius_site(artist, song, enums.ItemType.SONG)
     lyrics = get_genius_lyrics(site)
     return lyrics
 
@@ -136,9 +141,9 @@ def get_genius_album(artist, album, out):
     """
     For each song in an album, call get_genius_lyrics_from_site and handle output
     """
-
+    
     # Set up the scraper
-    site = format_genius_site(artist, album, "album")
+    site = format_genius_site(artist, album, enums.ItemType.ALBUM)
     page = utils.scraper_setup(site)
     page_text = page.text
 
@@ -158,38 +163,39 @@ def get_genius_album(artist, album, out):
             write_lyrics(lyrics, out, i, site)
 
             # so the clipboard doesn't get overwritten
-            if out == "clip":
+            if out is enums.OutputType.FILE:
                 input("Press enter to continue ({}/{})".format(i + 1, len(all_links)))
 
 
 def write_lyrics(lyrics, out, index=0, site=""):
     """
-    Write lyrics to `out`
+    Write lyrics to the location specified by the `out` enum
 
-    out should take one of three values:
-            out = "std"    : Use standard output (takes this value by default)
-            out = "clip"   : Append everything to a new clipboard entry
-            out = "file"   : Create a file according to the artist and song, and output to the file
-            out = "none"   : Do not output lyrics
+    out should take one of the values in genius_scrape/enum.OutputType
+            out = OutputType.STD : Use standard output (takes this value by default)
+            out = OutputType.CLIP : Append everything to a new clipboard entry
+            out = OutputType.FILE : Create a file according to the artist and song, and output to the file
+            out = OutputType.NONE : Do not output lyrics
 
     index is the song number
     """
 
     # Print the lyrics according to `out`
-    if out == "file":
+    if out is enums.OutputType.FILE:
         # Create the file
         # Add song-numbers (according to the order they were passed,
         # not their actual position in the album) zero-padded (width=2)
         name = site.rsplit('/', 2)
+        print("output file name = {}".format(name))
         artist = name[1]
         title = name[2]
         with open("{n}-{artist}-{title}.OUT".format(n=str(index).zfill(2), artist=artist, title=title), "w") as f:
             f.write(lyrics)
             print("Lyrics written to " + f.name)
-    elif out == "clip":
+    elif out is enums.OutputType.CLIP:
         pyperclip.copy(lyrics)
         print("Lyrics copied to clipboard")
-    elif out == "none":
+    elif out is enums.OutputType.NONE:
         pass
     else:
         print(lyrics)

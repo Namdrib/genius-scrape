@@ -17,19 +17,20 @@
 	- Run `python3 genius_scrape_cli.py` then follow the prompts
 	- e.g. `python3 genius_scrape_cli.py` -> "Lefa" "Tournee des bars" (quotes for clarity)
 - Search for an album:
-	- Run `python3 genius_scrape_cli.py -i album` then follow the prompts
+	- Run `python3 genius_scrape_cli.py -i ALBUM` then follow the prompts
 	- e.g. `python3 genius_scrape_cli.py` -> "Lefa" "Monsieur Fall" (quotes for clarity)
 - Notes
 	- The names are case insensitive, but may only contain alphanumerics, spaces, and dashes
 - This will try to open the Genius page for that artist/song combination and print the lyrics to standard output
 	- The song page must exist for it to work. Otherwise, it will throw an exception
 
-- The output method can be changed with command line flag `-o`. This can take either of three values: "std", "file", "clip", or "none" (quotes for clarity)
+- The output method can be changed with command line flag `-o`. This can take either of three values: "STD", "FILE", "CLIP", or "NONE" (quotes for clarity)
 	- std : print lyrics to standard output
 	- file : write lyrics to a file in the current directory (suffixed `.OUT`)
-		- e.g. `python3 genius_scrape_cli.py -i album -o file` -> "Lefa" "Monsieur Fall" (quotes for clarity)
+		- e.g. `python3 genius_scrape_cli.py -i ALBUM -o FILE` -> "Lefa" "Monsieur Fall" (quotes for clarity)
 		- this will search all the songs in Monsieur Fall, and save the lyrics of each to separate plaintext files
-	- clip : writes the lyrics into the clipboard (next paste action will paste lyrics) 
-		- when used in conjunction with `-i album`, it will pause between each song, promtping for any key to be pressed before continuing
+	- clip : writes the lyrics into the clipboard (next paste action will paste lyrics)
+		- when used in conjunction with `-i ALBUM`, it will pause between each song, promtping for any key to be pressed before continuing
 		- **WARNING**: this will overwrite the existing clipboard entry
 	- none : do not output lyrics (used for debug purposes)
+

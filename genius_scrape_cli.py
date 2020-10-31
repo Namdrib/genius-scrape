@@ -4,6 +4,7 @@ import argparse  # Multi-word song names or artists
 import textwrap
 
 from genius_scrape import config
+from genius_scrape import enums
 from genius_scrape import genius_scrape
 
 
@@ -27,20 +28,24 @@ def argparse_setup():
 
     parser.add_argument(
         "-i", "--item",
-        default="song",
-        choices=["album", "song"],
+        # type=enums.ItemType.__getitem__,
+        default='SONG',
+        choices=enums.ItemType.__members__,
         help="the type of item to search for (default: song)"
     )
+
     parser.add_argument(
         "-o", "--output",
-        default="std",
-        choices=["std", "file", "clip", "none"],
+        # type=enums.OutputType.__getitem__,
+        default='STD',
+        choices=enums.OutputType.__members__,
         help="how to handle output (default: std)"
         # std  : output to standard output
         # file : output to a file
         # clip : add output to a new clipboard entry
         # none : do not output lyrics (for debug purposes)
     )
+
     parser.add_argument(
         "-d", "--debug",
         help="show debug outputs",
@@ -61,11 +66,18 @@ def main():
     artist = input()
     item = input()
 
+    # convert from input string to enum
+    args.item = enums.ItemType[args.item]
+    args.output = enums.OutputType[args.output]
+
+    print("item: {}, output: {}".format(args.item, args.output))
     # Retrieve lyrics
-    if args.item == "song":
+    if args.item is enums.ItemType.SONG:
+        print('treating as a song')
         lyrics = genius_scrape.get_genius_lyrics_from_parts(artist, item)
         genius_scrape.write_lyrics(lyrics, args.output)
-    else:
+    elif args.item is enums.ItemType.ALBUM:
+        print('treating as an album')
         genius_scrape.get_genius_album(artist, item, args.output)
     return 0
 
