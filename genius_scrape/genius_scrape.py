@@ -163,7 +163,7 @@ def get_genius_album(artist, album, out):
             write_lyrics(lyrics, out, i, site)
 
             # so the clipboard doesn't get overwritten
-            if out is enums.OutputType.FILE:
+            if out is enums.OutputType.CLIP:
                 input("Press enter to continue ({}/{})".format(i + 1, len(all_links)))
 
 
