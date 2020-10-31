@@ -63,15 +63,18 @@ def format_genius_site(artist, item, item_type):
     Note: this may break if Genius changes the way they construct their URLs
     """
 
-    print("formatting genius site with artist: {}, item: {}, type: {}".format(artist, item, item_type))
+    if config.DEBUG:
+        print("\tconfig.DEBUG: formatting genius site with artist: {}, item: {}, type: {}".format(artist, item, item_type))
 
     name = format_name(artist, item, item_type)
-    print("name = {}".format(name))
+    if config.DEBUG:
+        print("\tconfig.DEBUG: Name = {}".format(name))
     if item_type is enums.ItemType.ALBUM:
         site = "{GS}/albums/{name}".format(GS=config.GENIUS_SITE, name=name)
     else:
         site = "{GS}/{name}-lyrics".format(GS=config.GENIUS_SITE, name=name)
-    print("site = {}".format(site))
+    if config.DEBUG:
+        print("\tconfig.DEBUG: Site = {}".format(site))
     return site
 
 
@@ -186,7 +189,10 @@ def write_lyrics(lyrics, out, index=0, site=""):
         # Add song-numbers (according to the order they were passed,
         # not their actual position in the album) zero-padded (width=2)
         name = site.rsplit('/', 2)
-        print("output file name = {}".format(name))
+
+        if config.DEBUG:
+            print("\tconfig.DEBUG: Output file name = {}".format(name))
+
         artist = name[1]
         title = name[2]
         with open("{n}-{artist}-{title}.OUT".format(n=str(index).zfill(2), artist=artist, title=title), "w") as f:

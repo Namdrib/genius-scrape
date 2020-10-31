@@ -70,14 +70,17 @@ def main():
     args.item = enums.ItemType[args.item]
     args.output = enums.OutputType[args.output]
 
-    print("item: {}, output: {}".format(args.item, args.output))
+    if config.DEBUG:
+        print("\tconfig.DEBUG: item: {}, output: {}".format(args.item, args.output))
     # Retrieve lyrics
     if args.item is enums.ItemType.SONG:
-        print('treating as a song')
+        if config.DEBUG:
+            print("\tconfig.DEBUG: treating as a song")
         lyrics = genius_scrape.get_genius_lyrics_from_parts(artist, item)
         genius_scrape.write_lyrics(lyrics, args.output)
     elif args.item is enums.ItemType.ALBUM:
-        print('treating as an album')
+        if config.DEBUG:
+            print(l"\tconfig.DEBUG: treating as an album")
         genius_scrape.get_genius_album(artist, item, args.output)
     return 0
 
