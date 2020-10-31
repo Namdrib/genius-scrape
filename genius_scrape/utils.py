@@ -59,3 +59,4 @@ def scraper_setup(site):
         exit(3)
     else:
         return page
+

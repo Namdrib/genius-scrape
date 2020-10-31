@@ -141,7 +141,7 @@ def get_genius_album(artist, album, out):
     """
     For each song in an album, call get_genius_lyrics_from_site and handle output
     """
-    
+
     # Set up the scraper
     site = format_genius_site(artist, album, enums.ItemType.ALBUM)
     page = utils.scraper_setup(site)
@@ -199,3 +199,4 @@ def write_lyrics(lyrics, out, index=0, site=""):
         pass
     else:
         print(lyrics)
+

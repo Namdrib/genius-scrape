@@ -6,3 +6,4 @@ GENIUS_SITE = "https://genius.com"
 
 global DEBUG
 DEBUG = False
+
