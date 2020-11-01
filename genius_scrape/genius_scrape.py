@@ -64,7 +64,8 @@ def format_genius_site(artist, item, item_type):
     """
 
     if config.DEBUG:
-        print("\tconfig.DEBUG: formatting genius site with artist: {}, item: {}, type: {}".format(artist, item, item_type))
+        print("\tconfig.DEBUG: formatting genius site with artist: {}, item: {}, type: {}".format(
+            artist, item, item_type))
 
     name = format_name(artist, item, item_type)
     if config.DEBUG:
@@ -205,4 +206,3 @@ def write_lyrics(lyrics, out, index=0, site=""):
         pass
     else:
         print(lyrics)
-
