@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import re
 import requests
 import sys  # getting os
@@ -27,7 +29,7 @@ def convert_line_endings(temp):
 
 def convert_quote_types(temp):
     """
-    Convert inverted commas â€œâ€�, and â€˜â€™ to straight quotes "" and ''
+    Convert inverted commas “”, and ‘’ to straight quotes "" and ''
     """
 
     u = unidecode(temp)
@@ -38,7 +40,7 @@ def convert_quote_types(temp):
 
 def scraper_setup(site):
     """
-    site: string url of site wanting to be scraped
+    site: string url of site to be scraped
     returns a page, or exits early if an error occurs
     """
     print("[[ About to search {site} ]]".format(site=site))

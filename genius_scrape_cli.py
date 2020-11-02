@@ -4,6 +4,7 @@ import argparse  # Multi-word song names or artists
 import textwrap
 
 from genius_scrape import config
+from genius_scrape import enums
 from genius_scrape import genius_scrape
 
 
@@ -27,20 +28,22 @@ def argparse_setup():
 
     parser.add_argument(
         "-i", "--item",
-        default="song",
-        choices=["album", "song"],
+        default='SONG',
+        choices=enums.ItemType.__members__,
         help="the type of item to search for (default: song)"
     )
+
     parser.add_argument(
         "-o", "--output",
-        default="std",
-        choices=["std", "file", "clip", "none"],
-        help="how to handle output (default: std)"
-        # std  : output to standard output
-        # file : output to a file
-        # clip : add output to a new clipboard entry
-        # none : do not output lyrics (for debug purposes)
+        default='STD',
+        choices=enums.OutputType.__members__,
+        help="how to handle output (default: STD)"
+        # STD  : output to standard output
+        # FILE : output to a file
+        # CLIP : add output to a new clipboard entry
+        # NONE : do not output lyrics (for debug purposes)
     )
+
     parser.add_argument(
         "-d", "--debug",
         help="show debug outputs",
@@ -56,16 +59,24 @@ def main():
     config.DEBUG = args.debug
 
     # Prompt for input
-    # artist = input("Enter the artist: ")
-    # item = input("Enter the {item_type}".format(item_type=args.item))
     artist = input()
     item = input()
 
+    # convert from input string to enum
+    args.item = enums.ItemType[args.item]
+    args.output = enums.OutputType[args.output]
+
+    if config.DEBUG:
+        print("\tconfig.DEBUG: item: {}, output: {}".format(args.item, args.output))
     # Retrieve lyrics
-    if args.item == "song":
+    if args.item is enums.ItemType.SONG:
+        if config.DEBUG:
+            print("\tconfig.DEBUG: treating as a song")
         lyrics = genius_scrape.get_genius_lyrics_from_parts(artist, item)
         genius_scrape.write_lyrics(lyrics, args.output)
-    else:
+    elif args.item is enums.ItemType.ALBUM:
+        if config.DEBUG:
+            print("\tconfig.DEBUG: treating as an album")
         genius_scrape.get_genius_album(artist, item, args.output)
     return 0
 

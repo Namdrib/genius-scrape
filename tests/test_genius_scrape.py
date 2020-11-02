@@ -1,4 +1,6 @@
 import unittest
+
+from genius_scrape import enums
 from genius_scrape import genius_scrape
 
 
@@ -21,7 +23,7 @@ class TestGeniusScrape(unittest.TestCase):
 
         for i in album_tests.items():
             self.assertEqual(genius_scrape.format_name(
-                i[0][0], i[0][1], "album"), i[1])
+                i[0][0], i[0][1], enums.ItemType.ALBUM), i[1])
 
     def test_format_name_song(self):
 
@@ -37,7 +39,7 @@ class TestGeniusScrape(unittest.TestCase):
 
         for i in song_tests.items():
             self.assertEqual(genius_scrape.format_name(
-                i[0][0], i[0][1], "song"), i[1])
+                i[0][0], i[0][1], enums.ItemType.SONG), i[1])
 
     def test_format_genius_site_album(self):
 
@@ -56,7 +58,7 @@ class TestGeniusScrape(unittest.TestCase):
 
         for i in album_tests.items():
             self.assertEqual(genius_scrape.format_genius_site(
-                i[0][0], i[0][1], "album"), i[1])
+                i[0][0], i[0][1], enums.ItemType.ALBUM), i[1])
 
     def test_format_genius_site_song(self):
 
@@ -72,7 +74,7 @@ class TestGeniusScrape(unittest.TestCase):
 
         for i in song_tests.items():
             self.assertEqual(genius_scrape.format_genius_site(
-                i[0][0], i[0][1], "song"), i[1])
+                i[0][0], i[0][1], enums.ItemType.SONG), i[1])
 
     def test_is_song_happy(self):
 
