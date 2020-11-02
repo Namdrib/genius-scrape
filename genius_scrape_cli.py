@@ -28,7 +28,6 @@ def argparse_setup():
 
     parser.add_argument(
         "-i", "--item",
-        # type=enums.ItemType.__getitem__,
         default='SONG',
         choices=enums.ItemType.__members__,
         help="the type of item to search for (default: song)"
@@ -36,7 +35,6 @@ def argparse_setup():
 
     parser.add_argument(
         "-o", "--output",
-        # type=enums.OutputType.__getitem__,
         default='STD',
         choices=enums.OutputType.__members__,
         help="how to handle output (default: STD)"
@@ -61,8 +59,6 @@ def main():
     config.DEBUG = args.debug
 
     # Prompt for input
-    # artist = input("Enter the artist: ")
-    # item = input("Enter the {item_type}".format(item_type=args.item))
     artist = input()
     item = input()
 
